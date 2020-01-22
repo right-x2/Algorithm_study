@@ -1,46 +1,43 @@
 #include <iostream>
-#include <queue>
+#include <vector>
+#include <algorithm>
+#include <cstdlib>
+
+
 using namespace std;
- 
-struct str{
-    int start;
-    int end;
-    str(int start,int end):start(start),end(end){};
-};
- 
-bool operator<(str s1,str s2){
-    if(s1.end!=s2.end)
-        return s1.end>s2.end;
-    else
-        return s1.start>s2.start; //종료 시간 같을 때 시작 시간 빠른 순서대로
-}
- 
-int main() {
-    
-    int n;
+
+vector< pair<int,int> >v;
+vector< pair<int,int> >tmp;
+
+int main(int argc, char** argv)
+{
+    ios::sync_with_stdio(false); 
+    cin.tie(NULL); 
+    cout.tie(NULL);
+    int n,a,b;
     cin>>n;
-    
-    int start, end; //시작, 종료 시간
-    priority_queue<str> pq;
-    
-    for(int i=0;i<n;i++){
-        scanf("%d %d",&start,&end);
-        pq.push(str(start,end));
+    for (int i = 0; i < n; ++i)
+    {
+        cin>>a>>b;
+        v.push_back(make_pair(a,b));
     }
-    
-    int ans=0;
-    end=-1;
-    
-    while(!pq.empty()){
-        str s=pq.top();
-        pq.pop();
-        
-        if(s.start>=end){
-            ans++;
-            end=s.end;
+    sort(v.begin(),v.end());
+    tmp.push_back(make_pair(v[0].first,v[0].second));
+    for (int i = 1; i < n; ++i)
+    {
+        int sz = tmp.size();
+        if(tmp[sz-1].second>v[i].first)
+        {
+            if(tmp[sz-1].second>v[i].second)
+            {
+                tmp[sz-1].first = v[i].first;
+                tmp[sz-1].second = v[i].second;
+            }
+        }
+        else
+        {
+            tmp.push_back(make_pair(v[i].first,v[i].second));
         }
     }
-    
-    cout<<ans<<endl;
-    return 0;
-}
+    cout<<tmp.size()<<"\n";
+}  
