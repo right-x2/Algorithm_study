@@ -2,7 +2,7 @@
 
  
 using namespace std;
-int arr[10000001];
+int arr[1000000001];
 
 int dp(int n,long long cnt)
 {
@@ -27,7 +27,7 @@ int dp(int n,long long cnt)
             arr[n/2]=cnt+1;
             dp(n/2,cnt+1);
         }
-        if(arr[(n-1)/3]==0||arr[(n-3)/2]>cnt+2)
+        if(arr[(n-1)/3]==0||arr[(n-1)/3]>cnt+2)
         {
             arr[(n-1)/3]=cnt+2;
             dp((n-1)/3,cnt+2);

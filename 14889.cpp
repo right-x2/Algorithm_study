@@ -23,12 +23,10 @@ int cal(int k)
         if(ans[i]==0)
         {
             p.push_back(i);
-            //cout<<i<<"p\n";
         }
         else
         {
             v.push_back(i);
-            //cout<<i<<" v\n";
         }
     }
     for (int i = 0; i < v.size(); ++i)

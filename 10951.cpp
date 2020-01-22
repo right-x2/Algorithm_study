@@ -13,7 +13,7 @@ int main(int argc, char** argv)
     while(1)
     {
         cin>>a>>b;
-        if(a==0&&b==0) break;
+        if(cin.eof() == true) break;
         cout<<a+b<<"\n";
     }
     

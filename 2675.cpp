@@ -8,10 +8,8 @@ int main(int argc, char** argv)
     cin.tie(NULL); 
     cout.tie(NULL);
     int n,a;
-    int sum = 0;
     string str;
     cin>>n;
-    cin>>a;
     for (int i = 0; i < n; ++i)
     {
         cin>>a>>str;
@@ -24,6 +22,6 @@ int main(int argc, char** argv)
         }
         cout<<""<<"\n";
     }
-    cout<<sum<<"\n";
+    
     return 0;
 }  
