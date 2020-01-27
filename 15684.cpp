@@ -1,30 +1,28 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
-#include <queue>
 
 using namespace std;
 
-int mn = 3;
-int arr[13][13];
-int ans[13];
+int mn = 5;
+int arr[301][301];
+int ans[301];
 int n,m,h;
 
 int chk(int k,int i, int j)
 {
-    while(i<m+2)
+    int flag = 0;
+    while(i<n+2)
     {
-        int flag = 0;
-        if(flag ==0)
+        if(flag == 0)
         {
-             if(j>1&&j<n)
+            
+             if(j>1&&j<m)
             {
-                 if(arr[i][j]==0&&arr[i][j+1]==0)
+                if((arr[i][j]!=0&&arr[i][j+1]!=0)&&arr[i][j]==arr[i][j+1])
                 {
                     j = j + 1;
                     flag = 1;
-                } 
-                else if(arr[i][j]==0&&arr[i][j-1]==0)
+                }
+                else if((arr[i][j]!=0&&arr[i][j-1]!=0)&&arr[i][j]==arr[i][j-1])
                 {
                     j = j - 1;
                     flag = 1;
@@ -36,7 +34,7 @@ int chk(int k,int i, int j)
             }
             else if(j==1)
             {
-                 if(arr[i][j]==0&&arr[i][j+1]==0)
+                 if((arr[i][j]!=0&&arr[i][j+1]!=0)&&arr[i][j]==arr[i][j+1])
                 {
                     j = j + 1;
                     flag = 1;
@@ -46,9 +44,9 @@ int chk(int k,int i, int j)
                     i = i + 1;
                 } 
             }
-            else if(j==n)
+            else if(j==m)
             {
-                if(arr[i][j]==0&&arr[i][j-1]==0)
+                if((arr[i][j]!=0&&arr[i][j-1]!=0)&&arr[i][j]==arr[i][j-1])
                 {
                     j = j -1;
                     flag = 1;
@@ -59,40 +57,26 @@ int chk(int k,int i, int j)
                 }            
             }       
         }
-        else j++;        
+        else 
+        {
+            flag = 0;
+            i++;
+        }        
     }
-    ans[k] = j;
-    return 0;
-
+    return j;
 }
 
-int dfs(int cnt)
+int dfs(int cnt, int tt)
 {
-    
-    cout<<""<<"\n";
-    for (int i = 1; i <= m; ++i)
-    {
-        for (int j = 1; j <= n; ++j)
-        {
-            cout<<arr[i][j]<<" ";
-        }
-        cout<<""<<"\n";
-    }
-    
+    tt++;
     int flag = 0;
+    if(cnt>3) return 0;
     
-    if(cnt>mn) return 0;
-    /*
     if(cnt==3)
     {
-        chk(1,1,1);
-        chk(2,2,2);
-        chk(3,3,3);
-        chk(4,4,4);
-        chk(5,5,5);
-        for (int i = 1; i <= n; ++i)
+        for (int i = 1; i <= m; ++i)
         {
-            if (ans[i]!=i)
+            if(chk(i,1,i)!=i)
             {
                 flag = 1;
                 break;
@@ -102,22 +86,13 @@ int dfs(int cnt)
         {
             if(mn>cnt) mn = cnt;
         }
-        for (int i = 1; i <=n; ++i)
-        {
-             ans[i] = 0;
-        }  
         return 0;
     }
     else
     {
-        chk(1,1,1);
-        chk(2,2,2);
-        chk(3,3,3);
-        chk(4,4,4);
-        chk(5,5,5);
-        for (int i = 1; i <= n; ++i)
+        for (int i = 1; i <= m; ++i)
         {
-            if (ans[i]!=i)
+            if(chk(i,1,i)!=i)
             {
                 flag = 1;
                 break;
@@ -126,22 +101,17 @@ int dfs(int cnt)
         if(flag==0)
         {
             if(mn>cnt) mn = cnt;
-        }
-        for (int i = 1; i <=n; ++i)
-        {
-             ans[i] = 0;
-        }        
+        }      
     }
-    */
-    for (int i = 1; i <= m; ++i)
+    for (int i = 1; i <= n; ++i)
     {
-        for (int j = 1; j < n; ++j)
+        for (int j = 1; j < m; ++j)
         {
             if(arr[i][j]==0&&arr[i][j+1]==0)
             {
-                arr[i][j] = 1;
-                arr[i][j+1] = 1;
-                dfs(cnt+1);
+                arr[i][j] = tt;
+                arr[i][j+1] = tt;
+                dfs(cnt+1,tt);
                 arr[i][j] = 0;
                 arr[i][j+1] = 0;
             }
@@ -156,39 +126,43 @@ int main(int argc, char** argv)
     ios::sync_with_stdio(false); 
     cin.tie(NULL); 
     cout.tie(NULL);
-    int a,b;
-    cin>>n>>h>>m;
+    int a,b,cnt = 2,flag =0;
+    cin>>m>>h>>n;
 
     for (int i = 0; i < h; ++i)
     {
         cin>>a>>b;
-        arr[a][b] = 1;
-        arr[a][b+1] = 1;
+        arr[a][b] = cnt;
+        arr[a][b+1] = cnt;
+        cnt++;
     }
     for (int i = 1; i <= m; ++i)
     {
-        for (int j = 1; j <= n; ++j)
+        if(chk(i,1,i)!=i)
         {
-            cout<<arr[i][j]<<" ";
+            flag = 1;
+            break;
         }
-        cout<<""<<"\n";
-    }
-    
-    for (int i = 1; i <= m; ++i)
-    {
-        for (int j = 1; j < n; ++j)
+    } 
+    if(flag == 0) cout<<0<<"\n";
+    else
+    {    
+       for (int i = 1; i <= n; ++i)
         {
-            if(arr[i][j]==0&&arr[i][j+1]==0)
+            for (int j = 1; j < m; ++j)
             {
-                arr[i][j] = 1;
-                arr[i][j+1] = 1;
-                dfs(1);
-                arr[i][j] = 0;
-                arr[i][j+1] = 0;
+                if(arr[i][j]==0&&arr[i][j+1]==0)
+                {
+                    arr[i][j] = cnt;
+                    arr[i][j+1] = cnt;
+                    dfs(1,cnt);
+                    arr[i][j] = 0;
+                    arr[i][j+1] = 0;
+                }
             }
         }
-    }
     
-    if(mn==5) cout<<-1<<"\n";
-    else cout<<mn<<"\n";
+        if(mn==5) cout<<-1<<"\n";
+        else cout<<mn<<"\n";
+    }
 }  
