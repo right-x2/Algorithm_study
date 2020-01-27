@@ -7,6 +7,7 @@
 
 using namespace std;
 
+int arr[100001];
 
 int main(int argc, char** argv)
 {
@@ -17,33 +18,22 @@ int main(int argc, char** argv)
     int max = -1001;
     int box = 0;
     cin>>a;
-    for (int i = 0; i <a ; ++i)
+    cin>>arr[0];
+    for (int i = 1; i <a ; ++i)
     {
         cin>>n;
-        if(n>0)
+        if(arr[i-1]+n>=n)
         {
-
-            if(box<0) 
-            {
-                if(-box<=n) sum = sum + box + n;
-                else sum = 0;
-                box = 0;
-            }
-            else
-            {
-                sum = sum + n;
-            }
-            if (sum>max)
-            {
-                max = sum;
-            }
+            arr[i] = arr[i-1]+n;
         }
         else
         {
-            box = box + n;
-            if(n>max) max = n;
+            arr[i] = n;
         }
-        cout<<sum<<"\n";
+    }
+    for (int i = 0; i < a; ++i)
+    {
+        if(max<arr[i]) max = arr[i];
     }
     cout<<max<<"\n";
 }  
