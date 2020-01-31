@@ -3,16 +3,16 @@
 #include <algorithm>
 #include <cstdlib>
 #include <stack>
+#include <queue>
 
 
 using namespace std;
 
-vector< pair<int,int> >v;
-vector< pair<int,int> >tmp;
+vector< pair<int,int> >v[20001];
 int n,m;
+priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > > pq;
 int arr[20001][20001];
 int c[20001];
-stack< pair<int,int> > stk;
 
 int dfs(int s)
 {
@@ -22,28 +22,26 @@ int dfs(int s)
     {
         if(arr[s][i]!=0)
         {
-            stk.push(make_pair(i,arr[s][i]));
+            pq.push(make_pair(arr[s][i],i));
         }
     }
-    while(!stk.empty())
+    while(!pq.empty())
     {
-        a = stk.top().first;
-        b = stk.top().second;
-        stk.pop();
+        b = pq.top().first;
+        a = pq.top().second;
+        pq.pop();
         for (int i = 1; i <=n ; ++i)
         {
             if(arr[a][i]!=0&&c[i]==0)
             {
                 if(arr[s][i]==0)
                 {
-                    
-                    stk.push(make_pair(i,b+arr[a][i]));
+                    pq.push(make_pair(b+arr[a][i],i));
                     arr[s][i] = b+arr[a][i];
                 }
                 else if(arr[s][i]>b+arr[a][i])
                 {
-                    
-                    stk.push(make_pair(i,b+arr[a][i]));
+                    pq.push(make_pair(b+arr[a][i],i));
                     arr[s][i] = b+arr[a][i];
                 }
             }
