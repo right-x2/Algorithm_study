@@ -30,12 +30,8 @@ int chk()
 
 int punch(int a,int b)
 {
-    if(arr[a][b]==1)
-    {
-        arr[a][b] = 0;
-        return 0;
-    }
     int sz = arr[a][b];
+    cout<<sz<<" asaf\n";
     arr[a][b] = 0;
     for (int i = 1; i < sz; ++i)
     {
@@ -73,28 +69,36 @@ int punch(int a,int b)
 int tpop()
 {
     vector<int> v;
-    for (int j = 0; j < w; ++j)
+    for (int i = 0; i < w; ++i)
     {
-        for (int k = 0; k < h; ++k)
+        int j = 0;
+        int flag = 0;
+        while(j<h)
         {
-            if(arr[k][j]==0&&v.size()!=0)
+            if(arr[j][i]==0&&flag==1)
             {
-                int mid = k;
-                while(arr[mid][j]==0) mid--;
-                mid++;
-                int cnt = 0;
-                while(!v.empty())
+                while(arr[j][i]==0&&j<h)
                 {
-                    int a = v[v.size()-1];
-                    v.pop_back();
-                    arr[mid+cnt][j] = a;
-                    cnt--;
+                    j++;
                 }
-                arr[mid+cnt][j] = 0;
+                int k = j-1;
+                while(v.size()>0)
+                {
+                    int tmp = v[v.size()-1];
+                    arr[k][i] = tmp;
+                    k--;
+                    v.pop_back();
+                }
             }
-            else if(arr[k][j]!=0)
+            else if(arr[j][i]!=0)
             {
-                v.push_back(arr[k][j]);
+                v.push_back(arr[j][i]);
+                flag = 1;
+                j++;
+            }
+            else
+            {
+                j++;
             }
         }
         v.clear();
@@ -120,11 +124,12 @@ int dfs(int s)
 
     for (int j = 0; j < w; ++j)
     {
-        for (int k = 0; k < h; ++k)
+        int k = 0;
+        while(k<h)
         {
             if(arr[k][j]!=0)
             {
-                punch(j,k);
+                punch(k,j);
                 dfs(s+1);
                 for (int i = 0; i < h; ++i)
                 {
@@ -135,6 +140,7 @@ int dfs(int s)
                 }
                 break;
             }
+            k++;
         }
     }
     return 0;
