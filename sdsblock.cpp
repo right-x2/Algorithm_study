@@ -1,10 +1,5 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
-#include <cstdlib>
 #include <stack>
-#include <queue>
-
 
 using namespace std;
 
@@ -19,94 +14,114 @@ int chk()
     {
         for (int j = 0; j < w; ++j)
         {
-            cout<<arr[i][j]<<" ";
             if(arr[i][j]!=0) cnt++;
+        }
+    }
+    if(cnt<mn) 
+    {
+        mn = cnt;
+        for (int i = 0; i < h; ++i)
+        {
+            for (int j = 0; j < w; ++j)
+            {
+                cout<<arr[i][j]<<" ";
+            }
+            cout<<"\n"<<"";
         }
         cout<<"\n"<<"";
     }
-    cout<<"\n"<<"";
-    if(cnt<mn) mn = cnt;
+    return 0;
 }
 
 int punch(int a,int b)
 {
-    int sz = arr[a][b];
-    cout<<sz<<" asaf\n";
-    arr[a][b] = 0;
-    for (int i = 1; i < sz; ++i)
+    stack <pair<int,int> > stk;
+    stk.push(make_pair(a,b));
+    while(!stk.empty())
     {
-        if(a-i>=0)
+        int i = stk.top().first;
+        int j = stk.top().second;
+        stk.pop();
+        int cnt = arr[i][j];
+        arr[i][j] = 0;
+        cout<<cnt<<"dsfa\n";
+        for (int k = 1; k < cnt; ++k)
         {
-            if(arr[a-i][b]!=0)
+            if(i-k>=0)
             {
-                punch(a-i,b);
+                if(arr[i-k][j]!=0)
+                {
+                    stk.push(make_pair(i-k,j));
+                }
             }
-        }
-        if(a+i<h)
-        {
-            if(arr[a+i][b]!=0)
+            if(i+k<h)
             {
-                punch(a+i,b);
+                if(arr[i+k][k]!=0)
+                {
+                    stk.push(make_pair(i+k,j));
+                }
             }
-        }
-        if(b-i>=0)
-        {
-            if(arr[a][b-i]!=0)
+            if(j-k>=0)
             {
-                punch(a,b-i);
+                if(arr[i][j-k]!=0)
+                {
+                    stk.push(make_pair(i,j-k));
+                }
             }
-        }
-        if(b+i<w)
-        {
-            if(arr[a][b+i]!=0)
+            if(j+k<w)
             {
-                punch(a,b+i);
+                if(arr[i][j+k]!=0)
+                {
+                    stk.push(make_pair(i,j+k));
+                }
             }
-        }
+        }        
     }
     return 0;
 }
 int tpop()
 {
-    vector<int> v;
+    stack<int> stk;
     for (int i = 0; i < w; ++i)
     {
         int j = 0;
         int flag = 0;
         while(j<h)
         {
-            if(arr[j][i]==0&&flag==1)
+            if(arr[j][i]!=0)
             {
-                while(arr[j][i]==0&&j<h)
-                {
-                    j++;
-                }
-                int k = j-1;
-                while(v.size()>0)
-                {
-                    int tmp = v[v.size()-1];
-                    arr[k][i] = tmp;
-                    k--;
-                    v.pop_back();
-                }
-            }
-            else if(arr[j][i]!=0)
-            {
-                v.push_back(arr[j][i]);
                 flag = 1;
+                stk.push(arr[j][i]);
                 j++;
             }
-            else
+            else if(arr[j][i]==0&&flag==1)
             {
-                j++;
+                while(arr[j][i]==0&&j<h) j++;
+                while(!stk.empty())
+                {
+                    j--;
+                    int tmp = stk.top();
+                    stk.pop();
+                    arr[j][i] = tmp;
+                }
+                while(j>=0)
+                {
+                    j--;
+                    arr[j][i] = 0;
+                }
+                j = 0;
+                flag = 0;     
             }
+            else j++;
+            
         }
-        v.clear();
+        while(!stk.empty()) stk.pop();
     }
     return 0; 
 }
 int dfs(int s)
 {
+
     tpop();
     if(s==n)
     {
@@ -129,18 +144,20 @@ int dfs(int s)
         {
             if(arr[k][j]!=0)
             {
+                cout<<"daf"<<"fas\n";
                 punch(k,j);
                 dfs(s+1);
-                for (int i = 0; i < h; ++i)
-                {
-                    for (int l = 0; l < w; ++l)
-                    {
-                        arr[i][l] = tmp[i][l];
-                    }
-                }
                 break;
             }
+
             k++;
+        }
+        for (int i = 0; i < h; ++i)
+        {
+            for (int l = 0; l < w; ++l)
+            {
+                arr[i][l] = tmp[i][l];
+            }
         }
     }
     return 0;
