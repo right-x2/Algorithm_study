@@ -84,7 +84,7 @@ int dfs(int cnt, int tt)
         }
         if(flag==0)
         {
-            if(mn>cnt) mn = cnt;
+            if(mn>cnt) mn =  cnt;
         }
         return 0;
     }
