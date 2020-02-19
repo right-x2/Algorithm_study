@@ -44,7 +44,6 @@ int punch(int a,int b)
         stk.pop();
         int cnt = arr[i][j];
         arr[i][j] = 0;
-        cout<<cnt<<"dsfa\n";
         for (int k = 1; k < cnt; ++k)
         {
             if(i-k>=0)
