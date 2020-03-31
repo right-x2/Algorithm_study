@@ -1,80 +1,60 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
-#include <cstdlib>
-#include <stack>
 #include <queue>
 
 
 using namespace std;
 
-vector< pair<int,int> >v[20001];
-int n,m;
-priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > > pq;
-int arr[20001][20001];
-int c[20001];
 
-int dfs(int s)
-{
-    int a,b;
-    c[s] = 1;
-    for (int i = 1; i <=n ; ++i)
-    {
-        if(arr[s][i]!=0)
-        {
-            pq.push(make_pair(arr[s][i],i));
-        }
-    }
-    while(!pq.empty())
-    {
-        b = pq.top().first;
-        a = pq.top().second;
+vector< pair<int,int> >v[20001];
+int arr[20001];
+int visited[20001];
+
+int play(int k){
+    priority_queue< pair<int,int>, vector< pair<int,int> >,greater< pair<int,int> > > pq;
+
+    pq.push(make_pair(0,k));
+    while(!pq.empty()){
+        int cost = pq.top().first;
+        int way = pq.top().second;
         pq.pop();
-        for (int i = 1; i <=n ; ++i)
+        if(visited[way]==0&&(arr[way]==0||arr[way]>cost))
         {
-            if(arr[a][i]!=0&&c[i]==0)
+            visited[way] = 1;
+            arr[way] = cost;
+            for (int i = 0; i < v[way].size(); ++i)
             {
-                if(arr[s][i]==0)
-                {
-                    pq.push(make_pair(b+arr[a][i],i));
-                    arr[s][i] = b+arr[a][i];
-                }
-                else if(arr[s][i]>b+arr[a][i])
-                {
-                    pq.push(make_pair(b+arr[a][i],i));
-                    arr[s][i] = b+arr[a][i];
-                }
+                pq.push(make_pair(v[way][i].first+cost,v[way][i].second));
             }
         }
-    }
+    }   
     return 0;
 }
+
 
 int main(int argc, char** argv)
 {
     ios::sync_with_stdio(false); 
     cin.tie(NULL); 
     cout.tie(NULL);
-    int s,a,b,c;
-    cin>>n>>m;
-    cin>>s;
-    for (int i = 0; i < m; ++i)
+    int n,w,k;
+    int a,b,c;
+    cin>>n>>w;
+    cin>>k;
+
+    for (int i = 0; i < w; ++i)
     {
         cin>>a>>b>>c;
-        if(arr[a][b]==0)
-        {
-            arr[a][b] = c;
-        }
-        else if(arr[a][b]>c)
-        {
-            arr[a][b] = c;
-        }
+        v[a].push_back(make_pair(c,b));         
     }
-    dfs(s);
-    for (int i = 1; i <= n; ++i)
+    play(k);
+
+
+    for (int i = 1; i <=n ; ++i)
     {
-        if(s==i) cout<<0<<"\n";
-        else if(arr[s][i]==0) cout<<"INF"<<"\n";
-        else cout<<arr[s][i]<<"\n";
+        if(i==k) cout<<0<<"\n";
+        else if(arr[i]==0) cout<<"INF"<<"\n";
+        else cout<<arr[i]<<"\n";
     }
+    return 0;
+    
 }  
