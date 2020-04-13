@@ -1,127 +1,120 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
 #include <queue>
-
 using namespace std;
 
-char arr[1001][1001];
+
+int arr[1001][1001];
 int chk[1001][1001];
-int n,m;
-int mn = 1000000;
+int blk[1001][1001];
 
-queue< pair<int , int> > q;
-
-int dfs(int i, int j, int cnt)
+int n, m;
+int mn = 1000001;
+struct Hm 
 {
-    if(cnt>mn) return 0;
-    if(i==n&&j==m)
-    {
-        if(cnt<mn) mn = cnt;
-        return 0;
-    }
-    if(i>1&&i<n)
-    {
-        if(chk[i-1][j]==0&&arr[i-1][j]=='0')
-        {
-            chk[i-1][j] = 1;
-            dfs(i-1,j,cnt+1);
-            chk[i-1][j] = 0;
-        }
-        if(chk[i+1][j]==0&&arr[i+1][j]=='0')
-        {
-            chk[i+1][j] = 1;
-            dfs(i+1,j,cnt+1);
-            chk[i+1][j] = 0;
-        }
-    }
-    else if(i==1)
-    {
-        if(chk[i+1][j]==0&&arr[i+1][j]=='0')
-        {
-            chk[i+1][j] = 1;
-            dfs(i+1,j,cnt+1);
-            chk[i+1][j] = 0;
-        }
-    }
-    else if(i==n)
-    {
-        if(chk[i-1][j]==0&&arr[i-1][j]=='0')
-        {
-            chk[i-1][j] = 1;
-            dfs(i-1,j,cnt+1);
-            chk[i-1][j] = 0;
-        }    
-    }
-
-    if(j>1&&j<m)
-    {
-        if(chk[i][j+1]==0&&arr[i][j+1]=='0')
-        {
-
-            chk[i][j+1] = 1;
-            dfs(i,j+1,cnt+1);
-            chk[i][j+1] = 0;
-        }
-        if(chk[i][j-1]==0&&arr[i][j-1]=='0')
-        {
-            chk[i][j-1] = 1;
-            dfs(i,j-1,cnt+1);
-            chk[i][j-1] = 0;
-        }
-    }
-
-    else if(j==1)
-    {
-        if(chk[i][j+1]==0&&arr[i][j+1]=='0')
-        {
-            chk[i][j+1] = 1;
-            dfs(i,j+1,cnt+1);
-            chk[i][j+1] = 0;
-        }
-    }
-    else if(j==m)
-    {
-        if(chk[i][j-1]==0&&arr[i][j-1]=='0')
-        {
-            chk[i][j-1] = 1;
-            dfs(i,j-1,cnt+1);
-            chk[i][j-1] = 0;
-        }        
-    }
-    return 0;
+    int y;
+    int x;
+    Hm(int a, int b) : y(a), x(b) {}
+};
+bool operator<(Hm t, Hm u){
+    return t.y > u.y;
 }
 
-int main(int argc, char** argv)
+int move(){
+	queue< pair<int,Hm> >pq;
+	pq.push(make_pair(0,Hm(0,0)));
+	chk[0][0] = 1;
+	while(!pq.empty()){
+		/*
+		for(int i = 0; i < n; i++){
+	    	for(int j = 0; j < m; j++){
+	    		cout<<blk[i][j]<<" ";
+	    	}
+	    	cout<<"\n"<<"";
+    	}
+    	cout<<"\n"<<"";
+    	*/
+		int a = pq.front().second.y;
+		int b = pq.front().second.x;
+		int dis = pq.front().first;
+		pq.pop();
+		if(a==n-1&&b==m-1){
+			if(chk[a][b]==0) mn = blk[a][b];
+			else mn = chk[a][b];
+			return 0;
+		}
+		if(a+1<n&&chk[a+1][b]==0){
+			if(arr[a+1][b]==1&&dis==0){
+				pq.push(make_pair(dis+1,Hm(a+1,b)));
+				blk[a+1][b] = chk[a][b] + 1; 
+			}
+			else if(arr[a+1][b]==0&&dis==0){
+				pq.push(make_pair(dis,Hm(a+1,b)));
+				chk[a+1][b] = chk[a][b] + 1;
+			}else if(arr[a+1][b]==0&&dis==1&&blk[a+1][b]==0){
+				pq.push(make_pair(dis,Hm(a+1,b)));
+				blk[a+1][b] = blk[a][b] + 1; 
+			}
+		} 
+
+		if(b+1<m&&chk[a][b+1]==0){
+			if(arr[a][b+1]==1&&dis==0){
+				pq.push(make_pair(dis+1,Hm(a,b+1)));
+				blk[a][b+1] = chk[a][b] + 1;
+			}
+			else if(arr[a][b+1]==0&&dis==0){
+				pq.push(make_pair(dis,Hm(a,b+1)));
+				chk[a][b+1] = chk[a][b] + 1;
+			}else if(arr[a][b+1]==0&&dis==1&&blk[a][b+1]==0){
+				pq.push(make_pair(dis,Hm(a,b+1)));
+				blk[a][b+1] = blk[a][b] + 1; 
+			}
+		}
+
+		if(a-1>=0&&chk[a-1][b]==0){
+			if(arr[a-1][b]==1&&dis==0){
+				pq.push(make_pair(dis+1,Hm(a-1,b)));
+				blk[a-1][b] = chk[a][b] + 1;
+			}
+			else if(arr[a-1][b]==0&&dis==0){
+				pq.push(make_pair(dis,Hm(a-1,b)));
+				chk[a-1][b] = chk[a][b] + 1;
+			}else if(arr[a-1][b]==0&&dis==1&&blk[a-1][b]==0){
+				pq.push(make_pair(dis,Hm(a-1,b)));
+				blk[a-1][b] = blk[a][b] + 1; 
+			}
+		}
+
+		if(b-1>=0&&chk[a][b-1]==0){
+			if(arr[a][b-1]==1&&dis==0){
+				pq.push(make_pair(dis+1,Hm(a,b-1)));
+				blk[a][b-1] = chk[a][b] + 1;
+			}
+			else if(arr[a][b-1]==0&&dis==0){
+				pq.push(make_pair(dis,Hm(a,b-1)));
+				chk[a][b-1] = chk[a][b] + 1;
+			}else if(arr[a][b-1]==0&&dis==1&&blk[a][b-1]==0){
+				pq.push(make_pair(dis,Hm(a,b-1)));
+				blk[a][b-1] = blk[a][b] + 1; 
+			}
+		}
+	}
+	return 0;
+}
+int main(int argc, char const *argv[])
 {
-    ios::sync_with_stdio(false); 
+	ios::sync_with_stdio(false); 
     cin.tie(NULL); 
     cout.tie(NULL);
-    string tmp;
-    int qsz = 0;
+    string str;
     cin>>n>>m;
-    for (int i = 1; i<= n; ++i)
-    {
-        cin>>tmp;
-        for (int j = 1; j<= m; ++j)
-        {
-            if(tmp[j-1]=='1')
-            {
-                q.push(make_pair(i,j));
-                qsz++;
-            }
-            arr[i][j] = tmp[j-1];
-        }
+    for(int i = 0; i < n; i++){
+    	cin>>str;
+    	for(int j = 0; j < m; j++){
+    		arr[i][j] = str[j]-'0';
+    	}
     }
-    for (int i = 0; i < qsz; ++i)
-    {
-        int y = q.front().first;
-        int x = q.front().second;
-        q.pop();
-        arr[y][x] = '0';
-        dfs(1,1,1);
-        arr[y][x] = '1';
-    }
-    if(mn==1000000) cout<<-1<<"\n";
+    move();
+    if(mn==1000001) cout<<-1<<"\n";
     else cout<<mn<<"\n";
-}  
+	return 0;
+}
