@@ -1,76 +1,48 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <math.h>
-
+#include <stack>
+#include <cmath>
 using namespace std;
 
-int arr[8001];
-int mx = -4001;
-int mn = 4001;
 vector<int> v;
-vector<int> c;
+vector<int> s;
+int arr[8001];
+int wid, avg, mid, mos = 0, mx = -4001, mn = 4000;
+
 int main(int argc, char** argv)
 {
-    //ios::sync_with_stdio(false); 
-    //cin.tie(NULL); 
-    //cout.tie(NULL);
-    int n,a,cm = 1,mxct = 1, cnt=1;
+    ios::sync_with_stdio(false); 
+    cin.tie(NULL); 
+    cout.tie(NULL);
+    int num,n;
     double sum = 0;
     cin>>n;
     for (int i = 0; i < n; ++i)
     {
-        cin>>a;
-        sum = sum + a;
-        if(a>mx) mx = a;
-        if(a<mn) mn = a;
-        v.push_back(a);
+        cin>>num;
+        sum = sum + num;
+        if(num>mx) mx = num;
+        if(num<mn) mn = num;
+        v.push_back(num);
+        if(num<0) num = num*-1 + 4000;
+        arr[num]++;
     }
     sort(v.begin(),v.end());
-    int fst = v[0];
-    for (int i = 1; i < v.size(); ++i)
+    for (int i = 0; i < 8001; ++i)
     {
-        if(fst==v[i])
+        if(mos<=arr[i])
         {
-            cnt++;
-        }
-        else
-        {
-            fst = v[i];
-            if(mxct==cnt)
-            {
-                c.push_back(v[i-1]);
-                cnt = 1;
-            }
-            else if(mxct<cnt)
-            {
-                mxct = cnt;
-                cnt = 1;
-                c.clear();
-                c.push_back(v[i-1]);
-            }
+            if(mos<arr[i]) s.clear();
+            if(i>4000) s.push_back((i-4000)*-1);
+            else s.push_back(i);
+            mos = arr[i];
         }
     }
-    if(cnt==mxct)
-    {
-        c.push_back(v[n-1]);
-    }
-    else if(cnt>mxct)
-    {
-        c.clear();
-        c.push_back(v[n-1]);
-    }
-    if(round(sum/n)==-0) cout<<0<<"\n";
-    else cout<<round(sum/n)<<"\n";
-    cout<<v[n/2]<<"\n";
-    sort(c.begin(),c.end());
-    if(c.size()==1)
-    {
-        cout<<c[0]<<"\n";
-    }
-    else
-    {
-        cout<<c[1]<<"\n";
-    }
+    sort(s.begin(),s.end());
+    cout<<(int)floor((sum/n)+0.5)<<"\n";
+    cout<<v[round(n/2)]<<"\n";
+    if(s.size()>1) cout<<s[1]<<"\n";
+    else cout<<s[0]<<"\n";
     cout<<mx-mn<<"\n";
 }  
