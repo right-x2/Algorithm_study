@@ -1,71 +1,86 @@
-#include <string>
-#include <vector>
-#include <stack>
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
 #include <queue>
-
 using namespace std;
+
 int arr[51][51];
-int c[51][51];
-int m;
-int n;
+int chk[51][51];
+int cnt;
+int n,m,t;
 
-int dfs(int y, int x)
+int bfs(int a, int b)
 {
-	c[y][x]=1;
-	int cx[4] = {1, -1, 0, 0};
-	int cy[4] = {0, 0, -1, 1};
-
-	for (int i = 0; i < 4; ++i)
-	{
-		if(cx[i]+x>=0&&cx[i]+x<m&&cy[i]+y>=0&&cy[i]+y<n)
-			if(arr[cy[i]+y][cx[i]+x]==1&&c[cy[i]+y][cx[i]+x]==0)
-			{
-				dfs(cy[i]+y,cx[i]+x);
-			}
-	}
+    queue< pair<int,int> >q;
+    q.push(make_pair(a,b));
+    while(!q.empty())
+    {
+        int y = q.front().first;
+        int x = q.front().second;
+        q.pop();
+        
+        if(y+1<n&&chk[y+1][x]==0&&arr[y+1][x]==1)
+        {
+            chk[y+1][x] = cnt;
+            q.push(make_pair(y+1,x));
+        }
+        if(y-1>=0&&chk[y-1][x]==0&&arr[y-1][x]==1)
+        {
+            chk[y-1][x] = cnt;
+            q.push(make_pair(y-1,x));
+        }
+        if(x+1<m&&chk[y][x+1]==0&&arr[y][x+1]==1)
+        {
+            chk[y][x+1] = cnt;
+            q.push(make_pair(y,x+1));
+        }
+        if(x-1>=0&&chk[y][x-1]==0&&arr[y][x-1]==1)
+        {
+            chk[y][x-1] = cnt;
+            q.push(make_pair(y,x-1));
+        }
+    }
+    return 0;
 }
-int clean(int n, int m)
+
+int main(int argc, char** argv)
 {
-	for (int j = 0; j < n; ++j)
-	{
-		for (int k = 0; k < m; ++k)
-		{
-			arr[j][k]=0;
-			c[j][k]=0;
-		}		
-	}
-}
+    ios::sync_with_stdio(false); 
+    cin.tie(NULL); 
+    cout.tie(NULL);
+    int k,a,b;
+    cin>>t;
+    for (int i = 0; i < t; ++i)
+    {
+        cin>>m>>n>>k;
+        cnt = 0;
+        for (int j = 0; j < k; ++j)
+        {
+            cin>>a>>b;
+            arr[b][a] = 1;
+        }
+        for (int j = 0; j < n; ++j)
+        {
+            for (int l = 0; l < m; ++l)
+            {
+                if(arr[j][l]==1&&chk[j][l]==0)
+                {
+                    cnt++;
+                    chk[j][l] = cnt;
+                    bfs(j,l);
+                }
+            }
+        }
+        for (int j = 0; j < n; ++j)
+        {
+            for (int l = 0; l < m; ++l)
+            {
+                arr[j][l] = 0;
+                chk[j][l] = 0;
+            }
+        }
+        cout<<cnt<<"\n";
+    }
 
-int main()
-{
-	int t,x,y,p;
-	int cnt = 0;
-	cin>>t;
-	for (int i = 0; i < t; ++i)
-	{
-		cin>>m>>n>>p;
-		for (int j = 0; j < p; ++j)
-		{
-			cin>>x>>y;
-			arr[y][x] = 1;
-		}
-		for (int j = 0; j < n; ++j)
-		{
-			for (int k = 0; k < m; ++k)
-			{
-				if(c[j][k]==0&&arr[j][k]==1)
-				{
-					cnt++;
-					dfs(j,k);
-				}
-			}		
-		}
-		if(i==t-1) cout<<cnt<<"";
-		else cout<<cnt<<"\n";
-		clean(n,m);
-		cnt = 0;
-
-	}
-	
-}
+}  
