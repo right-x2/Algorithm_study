@@ -17,19 +17,15 @@ int main(int argc, char** argv)
     long long sum = 0;
     int a,b,c,d;
     cin>>n>>m;
-    for (int i = 0; i < n; ++i)
+    for (int i = 1; i <= n; ++i)
     {
-        for (int j = 0; j < m; ++j)
+        for (int j = 1; j <= m; ++j)
         {
             cin>>num;
-            if(i==0&&j==0) arr[i][j] = num;
-            else if(j==0)
-            {
-                arr[i][j] = arr[i-1][m-1]+num;
-            }
+            if(i==1) arr[i][j] = num;
             else
             {
-                arr[i][j] = arr[i][j-1] + num;
+                arr[i][j] = arr[i-1][j]+num;
             }
         }
     }
@@ -38,7 +34,11 @@ int main(int argc, char** argv)
     for (int i = 0; i < k; ++i)
     {
         cin>>a>>b>>c>>d;
-        cout<<arr[c][d]-arr[a][b]<<"\n";
+        long long sum = 0;
+        for (int j = b; j <=d ; ++j)
+        {
+            sum = sum + arr[c][j]-arr[a-1][j];
+        }
+        cout<<sum<<"\n";
     }
-    cout<<sum<<"\n";
 }  
