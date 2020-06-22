@@ -4,34 +4,53 @@
 #include <algorithm>
 using namespace std;
 
-string s,e;
-int cnt = 0;
+int arr[10];
+int n,cost;
+string ans;
+int mn = 0;
 int comp(string a, string b)
 {
     for (int i = 0; i < a.length(); ++i)
     {
-        if(a[i]-'0'>b[i]-'0') return 0;
-        else if(a[i]-'0'<b[i]-'0') return 1;
+        if(a[i]>b[i]) return 1;
+        else if(a[i]==b[i]) continue;
+        else return 0;
     }
     return 1;
 }
-int dp(string str)
+int dfs(string str, int idx, int sum)
 {
-    if(str.length()>e.length()) return 0;
-    if(str.length()>s.length()||(str.length()==s.length()&&comp(s,str)==1))
+    if(ans!="")
     {
-        if(str.length()<e.length())
+        int len = ans.length()-str.length();
+        if((cost-sum)/mn<=len) return 0;
+    }
+    if(str=="0")
+    {
+        if(ans=="") ans = str;
+        return 0;
+    }
+    for (int i = idx; i >= 0; --i)
+    {
+        char k = (i+'0');
+        if(cost<sum+arr[i])
         {
-            cnt++;
+            if(str.length()>ans.length()) ans = str;
+            else if(str.length()==ans.length())
+            {
+                if(comp(str,ans)==1) ans = str;
+            }
         }
-        else if(str.length()==e.length())
+        else 
         {
-            if(comp(str,e)==1) cnt++;
+            dfs(str+k,i,sum+arr[i]);
+            for (int j = i-1; j >= 0; --j)
+            {
+                if(arr[j]<arr[i]) dfs(str,i-1,sum);
+            }
             return 0;
         }
     }
-    dp(str+'4');
-    dp(str+'7');
     return 0;
 }
 int main(int argc, char** argv)
@@ -39,11 +58,23 @@ int main(int argc, char** argv)
     ios::sync_with_stdio(false); 
     cin.tie(NULL); 
     cout.tie(NULL);
-    string str;
-
-    cin>>s>>e;
-    dp("4");
-    dp("7");
-    cout<<cnt<<"\n";
+    string str = "";
+    cin>>n;
+    for (int i = 0; i < n; ++i)
+    {
+        cin>>arr[i];
+        if(mn==0||mn>arr[i]) mn = arr[i];
+    }
+    cin>>cost;
+    int idx = n-1;
+    int sum = arr[idx];
+    for (int i = n-1; i >= 0; --i)
+    {
+        if(arr[i]<=cost) 
+        {
+            dfs(str+char(i+'0'),i,arr[i]);
+        }
+    }
+    cout<<ans<<"\n";
     return 0;
 }
