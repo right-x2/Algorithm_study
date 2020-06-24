@@ -1,295 +1,294 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
+#include <queue>
 using namespace std;
 
-int cnt = 0;
 int arr[21][21];
-int tmp[21][21];
-int ans[21][21];
-int c[21][21];
-int mx = 0;
-void right(int n)
-{
-	
-	for (int i = n-1; i >= 0; i--)
-	{
-		for (int j = n-2; j >= 0; j--)
-		{
-			if(arr[i][j]!=0)
-			{
-				int b = j;
-				while(b<n)
-				{
-					b++;
-					if(arr[i][b]!=0) break;
-				}
-				if(arr[i][b]!=0)
-				{
-					if(arr[i][b]==arr[i][j]&&c[i][b]==0)
-					{
-						arr[i][b] = arr[i][b]*2;
-						arr[i][j] = 0;
-						c[i][b] = 1;
-						if(mx<arr[i][b]){
-							mx = arr[i][b];
-							cnt++;
-						}
-					}
-					else
-					{
-						if(b-1==j)
-						{
-							continue;
-						}
-						else
-						{
-							arr[i][b-1] = arr[i][j];
-							arr[i][j] = 0;
-						}
-						
-					}
-				}
-				else
-				{
-					arr[i][b-1] = arr[i][j];
-					arr[i][j] = 0;
-				}
-			}
-		}
-	}
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			c[i][j] = 0;
-		}
-	}
+int ans = 0;
+int n;
 
-}
-void left(int n)
-{
-	
-	for (int i = 0; i < n; i++)
-	{
-		for (int j = 1; j < n; j++)
-		{
-			if(arr[i][j]!=0)
-			{
-				int b = j;
-				while(b>0)
-				{
-					b--;
-					if(arr[i][b]!=0) break;
-				}
-				if(b>-1)
-				{
-					if(arr[i][b]==arr[i][j]&&c[i][b]==0)
-					{
-						arr[i][b] = arr[i][b]*2;
-						arr[i][j] = 0;
-						c[i][b]=1;
-						if(mx<arr[i][b]){
-							mx = arr[i][b];
-							cnt++;
-						}
-					}
-					else
-					{
-						if(b+1==j)
-						{
-							continue;	
-						}
-						else
-						{
-							arr[i][b+1] = arr[i][j];
-							arr[i][j] = 0;
-						}
-					}
-				}
-				else
-				{
-					arr[i][b+1] = arr[i][j];
-					arr[i][j] = 0;
-				}
-			}
-		}
-	}
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			c[i][j] = 0;
-						c[b][j]=1;
-						if(mx<arr[b][j]){
-							cnt++;
-							mx = arr[b][j];
-						}
-					}
-					else
-					{
-						if(b+1==i)
-						{
-							continue;	
-						}
-						else
-						{
-							arr[b+1][j] = arr[i][j];
-							arr[i][j] = 0;
-		}
-	}
 
-}
 
-void down(int n)
+void run(int idx)
 {
-	for (int i = n-2; i >= 0; i--)
-	{
-		for (int j = 0; j < n; j++)
-		{
-			if(arr[i][j]!=0)
-			{
-				int b = i;
-				while(b>0)
-				{
-					b--;
-					if(arr[b][j]!=0) break;
-				}
-				if(arr[b][j]!=0)
-				{
-					if(arr[b][j]==arr[i][j]&&c[b][j]==0)
-					{
-						arr[b][j] = arr[b][j]*2;
-						arr[i][j] = 0;
-						}
-					}
-				}
-				else
-				{
-					arr[b-1][j] = arr[i][j];
-				}
-			}
-		}
-	}
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			c[i][j] = 0;
-		}
-	}
-}
+    queue<int> q;
+    int dx = 0;
+    if(idx==0)
+    {
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if(arr[j][i]!=0) 
+                {
+                    q.push(arr[j][i]);
+                    arr[j][i] = 0;
+                }
+            }
+            dx = 0;
+            while(!q.empty())
+            {
+                int tp = q.front();
+                q.pop();
+                arr[dx][i] = tp;
+                dx++;
+            }
+        }
+        
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n-1; ++j)
+            {
+                if(arr[j][i]==arr[j+1][i]&&arr[j][i]!=0)
+                {
+                    arr[j][i] = arr[j][i]*2;
+                    arr[j+1][i] = 0;
+                }
+            }
+            for (int j = 0; j < n; ++j)
+            {
+                if(arr[j][i]!=0) 
+                {
+                    q.push(arr[j][i]);
+                    arr[j][i] = 0;
+                }
+            }
+            dx = 0;
+            while(!q.empty())
+            {
 
-void up(int n)
-{
-	for (int i = 1; i < n; i++)
-	{
-		for (int j = 0; j < n; j++)
-		{
-			if(arr[i][j]!=0)
-			{
-				int b = i;
-				while(b>0)
-				{
-					b--;
-					if(arr[b][j]!=0) break;
-				}
-				if(arr[b][j]!=0)
-				{
-					if(arr[b][j]==arr[i][j]&&c[b][j]==0)
-					{
-						arr[b][j] = arr[b][j]*2;
-						arr[i][j] = 0;
-						c[b][j]=1;
-						if(mx<arr[b][j]){
-							mx = arr[b][j];
-							cnt++;
-						}
-					}
-					else
-					{
-						if(b+1==i)
-						{
-							continue;	
-						}
-						else
-						{
-							arr[b+1][j] = arr[i][j];
-							arr[i][j] = 0;
-						}
-					}
-				}
-				else
-				{
-					arr[b+1][j] = arr[i][j];
-				}
-			}
-		}
-	}
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			c[i][j] = 0;
-		}
-	}
-}
-void reset(int n)
-{
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			tmp[i][j] = arr[i][j];
-		}
-	}
+                int tp = q.front();
+                q.pop();
+                arr[dx][i] = tp;
+                dx++;
+            }
+        }
+        
+    }
+    if(idx==1)
+    {
+        
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = n-1; j >= 0; --j)
+            {
+                if(arr[i][j]!=0) 
+                {
+                    q.push(arr[i][j]);
+                    arr[i][j] = 0;
+                }
+            }
+            dx = n-1;
+            while(!q.empty())
+            {
+                int tp = q.front();
+                q.pop();
+                arr[i][dx] = tp;
+                dx--;
+            }
+        }
+        
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = n-1; j > 0; --j)
+            {
+                if(arr[i][j]==arr[i][j-1]&&arr[i][j]!=0)
+                {
+                    arr[i][j] = arr[i][j]*2;
+                    arr[i][j-1] = 0;
+                }
+            }
+            for (int j = n-1; j >= 0; --j)
+            {
+                if(arr[i][j]!=0) 
+                {
+                    q.push(arr[i][j]);
+                    arr[i][j] = 0;
+                }
+            }
+            dx = n-1;
+            while(!q.empty())
+            {
+                int tp = q.front();
+                q.pop();
+                arr[i][dx] = tp;
+                dx--;
+            }
+        }
+    }
+    if(idx==2)
+    {
+        
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = n-1; j >=0; --j)
+            {
+                if(arr[j][i]!=0) 
+                {
+                    q.push(arr[j][i]);
+                    arr[j][i] = 0;
+                }
+            }
+            dx = n-1;
+            while(!q.empty())
+            {
+                int tp = q.front();
+                q.pop();
+                arr[dx][i] = tp;
+                dx--;
+            }
+        }
+        
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = n-1; j > 0; --j)
+            {
+                if(arr[j][i]==arr[j-1][i]&&arr[j][i]!=0)
+                {
+                    arr[j][i] = arr[j][i]*2;
+                    arr[j-1][i] = 0;
+                }
+            }
+            for (int j = n-1; j >=0; --j)
+            {
+                if(arr[j][i]!=0) 
+                {
+                    q.push(arr[j][i]);
+                    arr[j][i] = 0;
+                }
+            }
+            dx = n-1;
+            while(!q.empty())
+            {
+                int tp = q.front();
+                q.pop();
+                arr[dx][i] = tp;
+                dx--;
+            }
+        }
+    }
+    if(idx==3)
+    {
+        
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if(arr[i][j]!=0) 
+                {
+                    q.push(arr[i][j]);
+                    arr[i][j] = 0;
+                }
+            }
+            dx = 0;
+            while(!q.empty())
+            {
+                int tp = q.front();
+                q.pop();
+                arr[i][dx] = tp;
+                dx++;
+            }
+        }
+        
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n-1; ++j)
+            {
+                if(arr[i][j]==arr[i][j+1]&&arr[i][j]!=0)
+                {
+                    arr[i][j] = arr[i][j]*2;
+                    arr[i][j+1] = 0;
+                }
+            }
+            for (int j = 0; j < n; ++j)
+            {
+                if(arr[i][j]!=0) 
+                {
+                    q.push(arr[i][j]);
+                    arr[i][j] = 0;
+                }
+            }
+            dx = 0;
+            while(!q.empty())
+            {
+                int tp = q.front();
+                q.pop();
+                arr[i][dx] = tp;
+                dx++;
+            }
+        }
+    }
 }
 
-void move(int n)
+int solve(int cnt)
 {
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			ans[i][j] = tmp[i][j];
-		}
-	}
-}
-void remove(int n)
-{
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			arr[i][j] = ans[i][j];
-		}
-	}
+    int tmp[21][21];
+    if(cnt==5)
+    {
+        for (int j = 0; j < n; ++j)
+        {
+            for (int k = 0; k < n; ++k)
+            {
+                if(arr[j][k]>ans) ans = arr[j][k];
+            }
+        }
+        return 0;        
+    }
+    for (int j = 0; j < n; ++j)
+    {
+        for (int k = 0; k < n; ++k)
+        {
+            tmp[j][k] = arr[j][k];
+        }
+    }
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < n; ++j)
+        {
+            for (int k = 0; k < n; ++k)
+            {
+                
+                arr[j][k] = tmp[j][k];
+            }
+            
+        }
+        run(i);
+        solve(cnt+1);
+    }
+
+    return 0;
 }
 
-int dfs()
+int main(int argc, char** argv)
 {
-	move(n);
-	for (int i = 0; i < count; ++i)
-	{
-		rmove(n);
-		up(n);
-		reset(n)
-		dfs(n);  
-	}
-}
-
-int main()
-{
-	int n,a;
-	cin>>n;
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			cin>>a;
-			tmp[i][j] = a;
-		}
-	}
-	reset(n);
-
+    ios::sync_with_stdio(false); 
+    cin.tie(NULL); 
+    cout.tie(NULL);
+    int tmp[21][21];
+    cin>>n;
+    
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < n; ++j)
+        {
+            cin>>arr[i][j];
+            tmp[i][j] = arr[i][j];
+        }
+    }   
+    for (int i = 0; i < 4; ++i)
+    {
+        
+        for (int j = 0; j < n; ++j)
+        {
+            for (int k = 0; k < n; ++k)
+            {
+                arr[j][k] = tmp[j][k];
+            }
+        }
+        run(i);
+        solve(1);
+    }
+    
+    cout<<ans<<"\n";
+    return 0;
 }
