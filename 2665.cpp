@@ -87,6 +87,6 @@ int main(int argc, char** argv)
         }
     }
     bfs();
-    cout<<ans<<"\n";
+    cout<<ans<<"";
     return 0;
 }
