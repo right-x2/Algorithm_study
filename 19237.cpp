@@ -49,13 +49,37 @@ int bfs()
             for (int i = 1; i <= 4; ++i)
             {
                 int idx = move[num][way][i]-1;
-                if(y+dy[idx]<n&&y+dy[idx]>=0&&x+dx[idx]<n&&x+dx[idx]>=0&&arr[y+dy[idx]][x+dx[idx]]!=NULL)
+                if(y+dy[idx]<n&&y+dy[idx]>=0&&x+dx[idx]<n&&x+dx[idx]>=0&&arr[y+dy[idx]][x+dx[idx]]==NULL)
                 {
+                    arr[y+dy[idx]][x+dx[idx]] = arr[y][x].gbn;
                     arr[y][x].gbn = 0;
+
                     temp.push_back(s);
                     flag = 1;
                     break;
                 }
+            }
+            if(flag==0)
+            {
+                for (int i = 1; i <= 4; ++i)
+                {
+                    int idx = move[num][way][i]-1;
+                    if(y+dy[idx]<n&&y+dy[idx]>=0&&x+dx[idx]<n&&x+dx[idx]>=0&&arr[y+dy[idx]][x+dx[idx]].gbn==0&&arr[y+dy[idx]][x+dx[idx]].num==num)
+                    {
+                        arr[y+dy[idx]][x+dx[idx]] = arr[y][x].gbn;
+                        arr[y][x].gbn = 0;
+                        temp.push_back(s);
+                        flag = 1;
+                        break;
+                    }
+                }                
+            }
+        }
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < n; ++j)
+            {
+                if(arr[i][j]!=NULL)
             }
         }
     }
