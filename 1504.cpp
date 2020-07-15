@@ -70,6 +70,5 @@ int main(int argc, char** argv)
     }
     chk[1] = 1;
     dfs(1,0);
-    cout<<ans<<"\n";
     return 0;
 }
