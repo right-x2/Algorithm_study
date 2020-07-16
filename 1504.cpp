@@ -69,6 +69,5 @@ int main(int argc, char** argv)
         temp.push_back(a);
     }
     chk[1] = 1;
-    dfs(1,0);
     return 0;
 }
