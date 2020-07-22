@@ -50,13 +50,5 @@ int main(int argc, char** argv)
         cout<<"\n"<<"";
     }
     cout<<"\n"<<"";
-    for (int i = 1; i <=n ; ++i)
-    {
-        for (int j = 0; j < 11; ++j)
-        {
-            cout<<arr[i][j][1]<<" ";
-        }
-        cout<<"\n"<<"";
-    }
     return 0;
 }
