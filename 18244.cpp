@@ -41,14 +41,5 @@ int main(int argc, char** argv)
     {
         dp(i,1,1,1);
     }
-    for (int i = 1; i <=n ; ++i)
-    {
-        for (int j = 0; j < 11; ++j)
-        {
-            cout<<arr[i][j][0]<<" ";
-        }
-        cout<<"\n"<<"";
-    }
-    cout<<"\n"<<"";
     return 0;
 }
