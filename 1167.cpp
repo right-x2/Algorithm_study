@@ -8,17 +8,31 @@ using namespace std;
 
 vector<pair<int,int> > v[100001];
 int chk[100001];
+int num[100001];
 vector<int> temp;
-int n;
+int n,ans;
 
 int solve(int idx)
-{
-    for (int i = 0; i < v[idx].size(); ++i)
-    {
-        if()
-    }
+{   
 
-    return chk[idx];
+    priority_queue<pair<int,int>, vector<pair<int,int>, greater<pair<int,int> > > pq;
+
+    pq.push(make_pair(0,idx));
+    chk[idx] = 1;
+    while(!pq.empty())
+    {
+        int tp = pq.front();
+        pq.pop();
+
+        for (int i = 0; i < v[idx].size(); ++i)
+        {
+            if(chk[v[idx][i].second])
+            {
+                chk[v[idx][i].second] = 1;
+            }
+        }
+    }
+    return num[idx];
 }
 
 
@@ -29,7 +43,7 @@ int main(int argc, char** argv)
     cout.tie(NULL);
 
     int a,b,c;
-
+    int dis;
     cin>>n;
 
     for (int i = 0; i < n; ++i)
@@ -43,11 +57,6 @@ int main(int argc, char** argv)
             cin>>c;
             v[a].push_back(make_pair(b,c));
         }
-    }
-
-    for (int i = 0; i < temp.size(); ++i)
-    {
-        if(chk[temp[i]]==0) solve(temp[i]);
     }
     return 0;
 }
