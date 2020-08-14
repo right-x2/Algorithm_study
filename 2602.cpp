@@ -12,6 +12,5 @@ int main(int argc, char** argv)
     cin.tie(NULL); 
     cout.tie(NULL);
     
-    int a;
     return 0;
 }
