@@ -1,51 +1,66 @@
+#include <vector>
 #include <iostream>
+#include <queue>
 
 using namespace std;
 
-int arr[10][10];
-int zero;
-
-int chk(int y, int x)
+int arr[9][9];
+int aflag = 0;
+int solve(int y, int x)
 {
-    int cnt = 0;
-    int ans[9] = { 0 , };
+    int ans = 0;
+    int box[10] ={0,0,0,0,0,0,0,0,0,0};
+    int a,b,c,d;
+    int flag = 0;
+
+    for (int i = y; i < 9; ++i)
+    {
+        for (int j = 0; j < 9; ++j)
+        {
+            if(arr[i][j]==0)
+            {
+                flag = 1;
+                a = i;
+                b = j;
+                break;
+            }
+        }
+        if(flag==1) break;
+    }
+    
+    if(flag==0)
+    {
+        aflag = 1;
+        return 0; 
+    } 
     for (int i = 0; i < 9; ++i)
     {
-        if(i!=x)
-        {
-            if(arr[y][i]==0)
-            {
-                cnt++;
-            }
-            else
-            {
-                ans[arr[y][i]] = 1;
-            }
-        }
+        box[arr[a][i]]++;
+        box[arr[i][b]]++;
     }
-    ans[9] = { 0 , };
-    for (int i = 0; i < 9; ++i)
+    c = a-(a%3);
+    d = b-(b%3);
+    
+    for (int i = c; i <c+3 ; ++i)
     {
-        if(i!=y)
+        for (int j = d; j < d+3; ++j)
         {
-            if(arr[i][x]==0)
-            {
-                cnt++;
-            }
-            else
-            {
-                ans[arr[i][x]] = 1;
-            }
+            box[arr[i][j]]++;
         }
     }
-    ans[9] = { 0 , };
-    for (int i = 0; i < 3; ++i)
+    for (int i = 1; i < 10; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+
+        if(box[i]==0)
         {
-            if
+            arr[a][b] = i;
+            solve(a,b);
+            if(aflag==1) return 0;
+            arr[a][b] = 0;
         }
     }
+    
+    return 0;
 }
 
 int main(int argc, char** argv)
@@ -53,22 +68,24 @@ int main(int argc, char** argv)
     ios::sync_with_stdio(false); 
     cin.tie(NULL); 
     cout.tie(NULL);
-    cin>>n;
-    for (int i = 0; i < 10; ++i)
+    
+    for (int i = 0; i < 9; ++i)
     {
-        for (int j = 0; j < 10; ++j)
+        for (int j = 0; j < 9; ++j)
         {
             cin>>arr[i][j];
-            if(arr[i][j]==0) zero++;
         }
     }
-    while(zero>0)
-    for (int i = 0; i < count; ++i)
+
+    solve(0,0);
+
+    for (int i = 0; i < 9; ++i)
     {
-        for (int j = 0; j < count; ++j)
+        for (int j = 0; j < 9; ++j)
         {
-            if(arr[i][j]==0) chk(i,j);
+            cout<<arr[i][j]<<" ";
         }
+        cout<<"\n";
     }
     return 0;
-}  
+}
