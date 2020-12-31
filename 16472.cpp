@@ -1,58 +1,52 @@
-#include <iostream>
 #include <vector>
+#include <iostream>
+#include <queue>
+#include <stack>
 #include <algorithm>
+
 using namespace std;
 
-int arr[30]={0,};
-int check(string str, int n)
+int n;
+int arr[27];
+
+vector<int> v;
+int ans = 1;
+int main(int argc, char** argv)
 {
-	int max = 0;
-	int tot = 0;
-	int cnt = 0;
-	int cc = 1; 
-	int num = 0;
-	for (int i = 0; i < str.length(); ++i)
-	{
-		if((int)str[i]>96)
-		{
-			num = (int)str[i]-96;
-		}
-		else
-		{
-			num = (int)str[i]-64;
-		}
-		cout<<arr[num]<<"num  ";
-		cout<<cc<<"cc\n";
-		if(arr[num]==cc)
-		{
-			tot++;
-		}
-		else if(arr[num]!=cc)
-		{
-			cnt++;
-			if(cnt>n)
-			{
-				if(max<tot) max = tot;
-				cnt = 0;
-				cc++;
-				tot = 1;
-				arr[num]=cc;
-			}
-			else
-			{
-				tot++;
-				arr[num]=cc;
-			}
-		}
-	}
-	return max;
-}
-int main()
-{
-	int n;
-	string str = "";
-	int cnt  = 0;
-	cin>>n;
-	cin>>str;
-	cout<<check(str,n)<<"\n";
+    ios::sync_with_stdio(false); 
+    cin.tie(NULL); 
+    cout.tie(NULL);
+    string str;
+    int len;
+    cin>>n;
+    cin>>str;
+    int cnt = 1;
+    int s = 0;
+    int e = 0;
+    len = str.length();
+    arr[str[0]-'a'] = 1;
+    while(e<len)
+    {
+        if(cnt<=n)
+        {
+            e++;
+            if(e==len) break;
+            if(arr[str[e]-'a']==0) cnt++;
+            if(cnt<=n)
+            {
+                if(e-s+1>ans) ans = e-s+1;
+            }
+            arr[str[e]-'a']++;
+        }
+        else
+        {
+            arr[str[s]-'a']--;
+            if(arr[str[s]-'a']==0) cnt--;
+            s++;
+        }
+
+    }
+
+    cout<<ans<<"\n";
+    return 0;
 }
