@@ -1,64 +1,36 @@
 #include <iostream>
-
- 
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <cmath>
 using namespace std;
-int arr[1000001];
 
-int dp(int n,long long cnt)
+int n;
+int INF = 987654321;
+int chk[1000001];
+int dp(int idx)
 {
-    //cout<<cnt<<" "<<n<<"\n";
-    if(n<=1) return 0;
-    if(n%3==0)
-    {
-        if(arr[n/3]==0||arr[n/3]>cnt+1)
-        {
-            arr[n/3]=cnt+1;
-            dp(n/3,cnt+1);
-        }
-        if((n-1)%2==0)
-        {
-            if(arr[(n-1)/2]==0||arr[(n-1)/2]>cnt+2)
-            {
-                arr[(n-1)/2]=cnt+2;
-                dp((n-1)/2,cnt+2);
-            }
-        }
+    if(chk[idx]!=0) return chk[idx];
+    if(idx==1) return 0;
+    int a = INF;
+    int b = INF;
+    int c = INF;
+    if(idx%3==0) a = dp(idx/3)+1;
+    if(idx%2==0) b = dp(idx/2)+1;
+    c = dp(idx-1)+1;
 
-    }
-    if(n%2==0)
-    {
-        if(arr[n/2]==0||arr[n/2]>cnt+1)
-        {
-            arr[n/2]=cnt+1;
-            dp(n/2,cnt+1);
-        }
-        if((n-1)%3==0)
-        {
-            if(arr[(n-1)/3]==0||arr[(n-1)/3]>cnt+2)
-            {
-                arr[(n-1)/3]=cnt+2;
-                dp((n-1)/3,cnt+2);
-            }
-        }
-    }
-        if(arr[n-1]==0||arr[n-1]>cnt+1)
-        {
-            arr[n-1]=cnt+1;
-            dp(n-1,cnt+1);
-        }
-
-    return 0;
+    int ans = min(a,b);
+    ans = min(ans,c);
+    chk[idx] = ans;
+    return ans;
 }
-
-
 int main(int argc, char** argv)
 {
     ios::sync_with_stdio(false); 
     cin.tie(NULL); 
     cout.tie(NULL);
-    int n;
     cin>>n;
-    dp(n,0);
-    cout<<arr[1]<<"\n";
+
+    cout<<dp(n)<<"\n";
     return 0;
-}  
+}
